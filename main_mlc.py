@@ -20,7 +20,7 @@ import torch.multiprocessing as mp
 import torch.utils.data
 import torch.utils.data.distributed
 
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
 
 import _init_paths
 from dataset.get_dataset import get_datasets
@@ -157,6 +157,8 @@ def parser_args():
                         help='apply early stop')
     parser.add_argument('--kill-stop', action='store_true', default=False,
                         help='apply early stop')
+    parser.add_argument('--arch', default='Query2Label', type=str,
+                       help='model architecture (default: Query2Label)')
     args = parser.parse_args()
     return args
 
@@ -260,10 +262,7 @@ def main_worker(args, logger):
 
 
     # tensorboard
-    if dist.get_rank() == 0:
-        summary_writer = SummaryWriter(log_dir=args.output)
-    else:
-        summary_writer = None
+    summary_writer = None
 
     # optionally resume from a checkpoint
     if args.resume:
@@ -400,7 +399,7 @@ def main_worker(args, logger):
             if dist.get_rank() == 0:
                 save_checkpoint({
                     'epoch': epoch + 1,
-                    'arch': args.arch,
+                    'arch': 'Query2Label',  # 하드코딩된 값 사용
                     'state_dict': state_dict,
                     'best_mAP': best_mAP,
                     'optimizer' : optimizer.state_dict(),
@@ -410,7 +409,7 @@ def main_worker(args, logger):
             if math.isnan(loss) or math.isnan(loss_ema):
                 save_checkpoint({
                     'epoch': epoch + 1,
-                    'arch': args.arch,
+                    'arch': 'Query2Label',  # 하드코딩된 값 사용
                     'state_dict': model.state_dict(),
                     'best_mAP': best_mAP,
                     'optimizer' : optimizer.state_dict(),

@@ -66,6 +66,10 @@ def parser_args():
     parser.add_argument('--pretrained', dest='pretrained', action='store_true',
                         help='use pre-trained model. default is False. ')
 
+    parser.add_argument('--gamma_neg', default=4, type=float,
+                    help='gamma neg for ASL loss (default: 4)')
+    parser.add_argument('--gamma_pos', default=0, type=float,
+                    help='gamma pos for ASL loss (default: 0)')
     parser.add_argument('--eps', default=1e-5, type=float,
                     help='eps for focal loss (default: 1e-5)')
 
